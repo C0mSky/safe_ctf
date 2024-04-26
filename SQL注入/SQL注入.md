@@ -17,28 +17,28 @@ MySQL5.0以上，Mysql自带了Information_schema这个数据库，5.0以下是�
 
 * **SCHEMATA表**：提供了当前`mysql`实例中所有数据库的信息。是`show databases`的结果取之此表。
   
-  * **`SCHEMA_NAME`						 **
+  * `SCHEMA_NAME`	
   
     ​													**——该字段保存了所有的数据库名**
 * **TABLES表**：提供了关于数据库中的表的信息（包括视图）。详细表述了某个表属于哪个schema，表类型，表引擎，创建时间等信息。是`show tables from schemaname`的结果取之此表。
-  * **`TABLE_NAME`							**
+  * `TABLE_NAME`
   
     ​													**——该字段保存了所有的表名**
   
-  * **`TABLE_SCHEMA`		            	**
+  * `TABLE_SCHEMA`		        
   
     ​													**——该字段保存了该表来自哪个数据库**
 * **COLUMNS表**：提供了表中的列信息。详细表述了某张表的所有列以及每个列的信息。是`show columns from schemaname.tablename`的结果取之此表。
   
-  * **`COLUMN_NAME`						**
+  * `COLUMN_NAME`						
   
     ​													**——该字段保存了所有的字段名**
   
-  * **`TABLE_NAME`						   **
+  * `TABLE_NAME`						   
   
     ​													**——该字段保存了该字段来自哪个数据表**
   
-  * **`TABLE_SCHEMA`						**
+  * `TABLE_SCHEMA`						
   
     ​													**——该字段保存了该字段来自哪个数据库**
 * STATISTICS表：提供了关于表索引的信息。是`show index from schemaname.tablename`的结果取之此表。
@@ -127,9 +127,9 @@ SQL注入攻击是通过操作输入来修改SQL语句，用以达到执行代�
 4. 查找Web后台管理入口。WEB后台管理通常不对普通用户开放，要找到后台管理的登录网址，可以利用Web目录扫描工具（如：`wwwscan`、`AWVS`）快速搜索到可能的登录地址，然后逐一尝试，便可以找到后台管理平台的登录网址。
 5. 入侵和破坏。一般后台管理具有较高权限和较多的功能，使用前面已破译的用户名、密码成功登录后台管理平台后，就可以任意进行破坏，比如上传木马、篡改网页、修改和窃取信息等，还可以进一步提权，入侵Web服务器和数据库服务器。
 
-## MySQL联合查询注入流程
+# MySQL联合查询注入流程
 
-### 判断是否存在注入点
+## 判断是否存在注入点
 
 一般利用英文**单引号(')**或者**双引号（"）**来判断是否存在漏洞，如果出现SQL语句错误说明有很大的可能会存在漏洞。
 
@@ -159,11 +159,11 @@ SELECT first_name, last_name FROM users WHERE user_id = '1'';
 
 ![](image/1_3.jpg)
 
-### 判断注入类型
+## 判断注入类型
 
 判断注入类型是数字型还是字符型，这涉及到在注入的过程中是否需要添加单引号，可以使用：
 
-#### 法一：and
+### 法一：and
 
 and 逻辑与，当条件表达式两边都为真才是真，有一边为假则是假
 
@@ -208,7 +208,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1 and 1=2';
 
 所以就是两条语句都通过转换变为了1。
 
-#### 法二：1asdf
+### 法二：1asdf
 
 仍以某网站为例，当URL为http://192.168.234.128/DVWA/vulnerabilities/sqli/?id=1asdf&Submit=Submit#，后端执行的SQL语句可能为以下两个SQL语句中的其中一个
 
@@ -220,7 +220,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1asdf'; 						———
 * 有报错则为数字型，数字型仅有0-9的数字，无法识别
 * 无报错则为字符型，输出结果一致的情况请参考隐式类型转换。
 
-#### 法三：1+1
+### 法三：1+1
 
 * `%2b`是`+`的URL编码
 
@@ -236,7 +236,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1+1'; 							———�
 
 当`1+1`和`1`的执行结果一致的时候是字符型，不一致则为数字型
 
-### 通过报错判断闭合方式
+## 通过报错判断闭合方式
 
 * 单行注释
 
@@ -246,7 +246,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1+1'; 							———�
 
     %23
 
-### 判断列数
+## 判断列数
 
 * `order by`
 
@@ -275,7 +275,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1' order by 3#';
 * 图中URL的%23为井号（#）进行了url编码，是为了将SQL语句中多余的单引号注释掉，GET型注入可以使用`#`号的URL编码`%23`或者`--+`进行注释。
 * `%20`是空格的URL编码
 
-### 确定显示位
+## 确定显示位
 
 在一个网站的正常页面，服务端执行SQL语句查询数据库中的数据，客户端将数据展示在页面中，这个展示数据的位置就叫显示位。
 
@@ -295,9 +295,9 @@ SELECT first_name, last_name FROM users WHERE user_id = '1' union select 1,2#';
 
 但是在实战中一般不查询`union`左边的内容，一是因为程序在展示数据的时候通常只会取结果集的第一行数据，二是因为`union`左边查询出来的内容对我们基本没用。所以，只要让第一行查询的结果是空集，即`union`左边的`select`子句查询结果为空，那么`union `右边的查询结果自然就成为了第一行，打印在网页上了。所以让`union`左边查询不到，可以将其改为负数或者改为比较大的数字。
 
-### 获取数据
+## 获取数据
 
-####  获取数据库名、数据库版本
+###  获取数据库名、数据库版本
 
 ```
 URL:
@@ -311,7 +311,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1' union select databa
 
 ![](image/1.jpg)
 
-#### 获取数据库中的表名
+### 获取数据库中的表名
 
 * `group_concat`
 
@@ -328,7 +328,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1' union select databa
 
   将多行数据按照指定的顺序连接成一个字符串，默认以逗号分隔。
 
-方法一：
+#### 方法一：
 
 ```
 URL:
@@ -341,7 +341,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,table
 
 ![](image/3.jpg)
 
-方法二：
+#### 方法二：
 
 有时候回显只会显示第一行，所以就需要将表名拼接成一个字符串，URL和SQL语句如下：
 
@@ -354,7 +354,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,group
 
 ![](image/2.jpg)
 
-方法三：
+#### 方法三：
 
 ```
 URL:
@@ -365,7 +365,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,(sele
 
 ![](image/4.jpg)
 
-#### 获取数据库中某个表的字段
+### 获取数据库中某个表的字段
 
 方法同获取表名一样，例子如下：
 
@@ -378,7 +378,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,group
 
 ![](image/5.jpg)
 
-#### 获取数据库中某个表中的记录
+### 获取数据库中某个表中的记录
 
 方法同获取表名一样，例子如下：
 
