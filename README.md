@@ -1,12 +1,9 @@
 # 前言
 
-* 前置知识
-  * `Information_schema`数据库
-  * `SQL`查询语法
-* 靶场
-  * `DVWA`
-  * `sql-labs`
-* 插件
-  * `hackbar`
-* 软件
-  * `BurpSuite2024`
+本人目前正在学习web安全，现将部分笔记上传到github，还望各位大佬多多指点。
+
+目前已上传
+
+* SQL注入
+  * 联合查询注入
+  * 布尔盲注
