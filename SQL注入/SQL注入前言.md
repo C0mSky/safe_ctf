@@ -86,17 +86,17 @@ general_log_file = "D:/phpStudy1/PHPTutorial/MySQL/data/mysql.log"
 
 如图：
 
-![](SQL注入前言/photo/myini.jpg)
+![](image/myini.jpg)
 
 然后打开日志文件，就可以看到后端程序所执行的SQL语句了。
 
-![](SQL注入前言/photo/mysqldata.jpg)
+![](image/mysqldata.jpg)
 
 # ASCII码
 
 为方便查询，故在此处放置一张ASCII码表。
 
-![](SQL注入前言/photo/ascii.png)
+![](image/ascii.png)
 
 # SQL注入
 

