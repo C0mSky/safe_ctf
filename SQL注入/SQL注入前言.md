@@ -29,7 +29,7 @@ MySQL5.0以上，Mysql自带了Information_schema这个数据库，5.0以下是�
 
   * `TABLE_SCHEMA`		        
 
-    ​													**——该字段保存了该表来自哪个数据库**
+    ​													**——该字段保存了某个表来自哪个数据库**
 
 * **COLUMNS表**：提供了表中的列信息。详细表述了某张表的所有列以及每个列的信息。是`show columns from schemaname.tablename`的结果取之此表。
 
@@ -39,11 +39,11 @@ MySQL5.0以上，Mysql自带了Information_schema这个数据库，5.0以下是�
 
   * `TABLE_NAME`						   
 
-    ​													**——该字段保存了该字段来自哪个数据表**
+    ​													**——该字段保存了某个字段来自哪个数据表**
 
   * `TABLE_SCHEMA`						
 
-    ​													**——该字段保存了该字段来自哪个数据库**
+    ​													**——该字段保存了某个字段来自哪个数据库**
 
 * STATISTICS表：提供了关于表索引的信息。是`show index from schemaname.tablename`的结果取之此表。
 
